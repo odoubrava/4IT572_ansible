@@ -22,8 +22,7 @@
         security_token: "{{session_token}}"
       register: ec2_instance_result
 
-    - name: Log new ID
-      set_fact:
+    - set_fact:
         new_eshop_id: "{{ec2_instance_result.instances[0].instance_id}}"
 
     - name: Add instance host to group
@@ -51,36 +50,29 @@
           - git
         state: latest
         update_cache: yes
-      
       become: yes
     - service:
         name: docker
         state: started
         enabled: yes
-      
       become: yes
     - name: Start Docker on startup
       shell: systemctl enable docker
-      
       become: yes
     - name: Set rights to docker
       shell: usermod -a -G docker ec2-user
-      
       become: yes
     - name: Get project files from git
       git:
         repo: "https://github.com/odoubrava/4IT572_docker.git"
-      
         dest: ./app
     - name: Build docker with eshop
       shell: cd app && docker build -t myeshop:latest .
-      
       become: yes
     - name: Run Docker with eshop
       shell: docker run -p 80:3000 myeshop
       async: 45
       poll: 0
-      
       become: yes
     - wait_for:
         port:
@@ -100,7 +92,7 @@
         security_token: "{{session_token}}"
         region: us-east-1
         filters:
-          "instance.group-id": "eshop"
+          "instance.group-id": "Eshop"
       register: ec2_instance_info_result
 
     - name: Terminate old instances
