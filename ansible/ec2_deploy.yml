@@ -51,7 +51,7 @@
         security_token: "{{session_token}}"
         region: us-east-1
         filters:
-          "instance.group-id": "eshop"
+          instance.group-id: sg-04a653894de498964
       register: ec2_instance_info_result
 
     - name: Terminate old instances
