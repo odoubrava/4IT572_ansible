@@ -23,7 +23,7 @@
       register: ec2_instance_result
 
     - set_fact:
-        new_instance_id: "{{ec2_instance_result.instances[0].instance_id}}"
+        new_eshop_id: "{{ec2_instance_result.instances[0].instance_id}}"
 
     - name: Add instance host to group
       add_host:
@@ -85,14 +85,13 @@
     - ./group_vars/all/aws.yml
 
   tasks:
-    - name: Get info about existing instances
+    - name: Get existing eshop instances
       amazon.aws.ec2_instance_info:
         aws_access_key: "{{access_key}}"
         aws_secret_key: "{{secret_key}}"
         security_token: "{{session_token}}"
         region: us-east-1
-        filters:
-          "tag:Name": "eshop"
+        Name: "Eshop"
       register: ec2_instance_info_result
 
     - name: Terminate old instances
@@ -105,4 +104,4 @@
         aws_secret_key: "{{secret_key}}"
         security_token: "{{session_token}}"
       with_items: "{{ec2_instance_info_result.instances}}"
-      when: item.instance_id != new_instance_id
+      when: item.instance_id != new_eshop_id
