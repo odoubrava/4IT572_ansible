@@ -22,14 +22,15 @@
         security_token: "{{session_token}}"
       register: ec2_instance_result
     
+    - name: Save id
+      set_fact:
+        new_instance_id: "{{ec2_instance_result.instances[0].instance_id}}"
+
     - name: Add instance host to group
       add_host:
         hostname: "{{item.public_ip_address}}"
         groupname: launched
       loop: "{{ec2_instance_result.instances}}"
-    
-    - set_fact:
-        new_instance_id: "{{ec2_instance_result.instances[0].instance_id}}"
 
     - name: Wait for SSH connections
       delegate_to: "{{item.public_ip_address}}"
