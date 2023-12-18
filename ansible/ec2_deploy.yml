@@ -22,7 +22,8 @@
         security_token: "{{session_token}}"
       register: ec2_instance_result
 
-    - set_fact:
+    - name: Save new eshop ID
+      set_fact:
         new_eshop_id: "{{ec2_instance_result.instances[0].instance_id}}"
 
     - name: Add instance host to group
@@ -92,7 +93,7 @@
         security_token: "{{session_token}}"
         region: us-east-1
         filters:
-          "instance.group-id": "Eshop"
+          "instance.group-id": "eshop"
       register: ec2_instance_info_result
 
     - name: Terminate old instances
